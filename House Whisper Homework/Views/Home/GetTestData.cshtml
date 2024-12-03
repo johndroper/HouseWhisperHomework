@@ -1,0 +1,36 @@
+﻿@{
+  Layout = "_Layout";
+}
+<h2>Create Test Data</h2>
+<p>
+  A large number of events will take a long time to generate. Please be patient.
+</p>
+<form action="/Home/CreateTestCalendar" method="post">
+  <dl>
+    <dt>
+      <label>Number Of Events</label>
+    </dt>
+    <dd>
+      <input type="range" id="numberOfEvents" name="numberOfEvents" min="1" max="100" step="1" value="20" />
+    </dd>
+    <dt>
+      <label>Start of Date Range</label>
+    </dt>
+    <dd>
+      <input type="date" id="rangeStartDate" name="rangeStartDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+    </dd>
+    <dt>
+      <label>End of Date Range</label>
+    </dt>
+    <dd>
+      <input type="date" id="rangeEndDate" name="rangeEndDate" value="@DateTime.Now.AddDays(14).ToString("yyyy-MM-dd")" />
+    </dd>
+    <dt>
+      <label>Maximum Duration (hours)</label>
+    </dt>
+    <dd>
+      <input type="range" id="maxDurationHours" name="maxDurationHours" min="1" max="8" step="1" value="1" />
+    </dd>
+  </dl>
+  <button type="submit">Create Test Data</button>
+</form>

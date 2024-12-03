@@ -1,0 +1,128 @@
+﻿@{
+  Layout = "_Layout";
+}
+@using HouseWhisperHomework.Models
+@model FreeTimeSlotsMultiAgentData
+@section scripts {
+  <script>
+    function addAgentUrl() {
+        $("#agentUrlsContainer").append(`
+                <div>
+                    <input type="text" class="agent-url" placeholder="Enter Agent URL" />
+                    <button type="button" onclick="removeAgentUrl(this)">Remove</button>
+                </div>
+            `);
+    }
+
+    function removeAgentUrl(button) {
+        $(button).closest("div").remove();
+    }
+
+    function addTimeSlot() {
+        $("#freeTimeSlotRequests").append(`
+                <div class="time-slot">
+                    <label>Start Date:</label>
+                    <input type="date" class="start-date" />
+                    <label>End Date:</label>
+                    <input type="date" class="end-date" />
+                    <label>Duration (hours):</label>
+                    <input type="number" class="duration" min="0.5" step="0.5" />
+                    <button type="button" onclick="removeTimeSlot(this)">Remove</button>
+                </div>
+            `);
+    }
+
+    function removeTimeSlot(button) {
+        $(button).closest(".time-slot").remove();
+    }
+
+    function submitFreeTimeSlotsMultiAgent() {
+        const agentUrls = [];
+        $("#agentUrlsContainer .agent-url").each(function() {
+            const url = $(this).val().trim();
+            if (url) agentUrls.push(url);
+        });
+
+        const freeTimeSlotRequests = [];
+        $("#freeTimeSlotRequests .time-slot").each(function() {
+            const startDate = $(this).find(".start-date").val();
+            const endDate = $(this).find(".end-date").val();
+            const duration = parseFloat($(this).find(".duration").val());
+
+            if (startDate && endDate && duration) {
+                freeTimeSlotRequests.push({
+                    StartDate: startDate,
+                    EndDate: endDate,
+                    DurationHours: duration
+                });
+            }
+        });
+
+        const numberOfSlots = parseInt($("#numberOfSlots").val());
+        const payload = {
+            AgentUrls: agentUrls,
+            FreeTileSlotRequests: freeTimeSlotRequests,
+            NumberOfSlots: numberOfSlots
+        };
+
+        // Make the AJAX call
+        $.ajax({
+            url: '/Home/GetFreeTimeSlotsMultiAgent', // Replace with your controller action URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            success: function(response) {
+                displayResults(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error getting free time slots:', error);
+                $("#results").html("An error occurred while retrieving free time slots.");
+            }
+        });
+    }
+
+    function displayResults(freeTimeSlots) {
+        if (!freeTimeSlots || freeTimeSlots.length === 0) {
+            $("#results").html("<p>No free time slots found.</p>");
+            return;
+        }
+        const resultHtml = freeTimeSlots.map(slot => `<li>From ${slot.start} - To ${slot.end}</li>`).join("");
+        $("#results").html(resultHtml);
+    }
+  </script>
+}
+<h1>Multi-Agent Free Time Slots Finder</h1>
+
+<div id="agentUrlsContainer">
+  <label>Agent URLs:</label>
+  <div>
+    <input type="text" class="agent-url" placeholder="Enter Agent URL" value="@this.Model.DefaultAgent1" />
+    <button type="button" onclick="removeAgentUrl(this)">Remove</button>
+    <input type="text" class="agent-url" placeholder="Enter Agent URL" value="@this.Model.DefaultAgent2" />
+    <button type="button" onclick="removeAgentUrl(this)">Remove</button>
+  </div>
+</div>
+<button type="button" onclick="addAgentUrl()">Add Agent URL</button>
+
+<h2>Time Slot Requests</h2>
+<p>This prioritizes your combined least busy days.</p>
+<div id="freeTimeSlotRequests">
+  <div class="time-slot">
+    <label>Start Date:</label>
+    <input type="date" class="start-date" />
+    <label>End Date:</label>
+    <input type="date" class="end-date" />
+    <label>Duration (hours):</label>
+    <input type="number" class="duration" min="0.5" step="0.5" value="1" />
+    <button type="button" onclick="removeTimeSlot(this)">Remove</button>
+  </div>
+</div>
+<button type="button" onclick="addTimeSlot()">Add Time Slot</button>
+
+<label>Number of Slots:</label>
+<input type="number" id="numberOfSlots" min="1" value="1" />
+<br />
+<button type="button" onclick="submitFreeTimeSlotsMultiAgent()">Submit</button>
+
+<h2>Results</h2>
+<ul id="results"></ul>

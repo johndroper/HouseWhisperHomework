@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>@ViewBag.Title</title>
+  <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+  @RenderSection("head", required: false)
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">HouseWhisper.ai Homework</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="/Home/Index">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/Home/GetTestData">Get Test Data</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/Home/AmIFree">Am I Free?</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/Home/FreeTimeSlots">Free Time Slots</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/Home/FreeTimeSlotsMultiAgent">Free Time Slots Multi-Agent</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/Home/IsDayFree">Is Day Free?</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div>
+      @RenderBody()
+    </div>
+  </div>
+  <script src="~/lib/jquery/dist/jquery.min.js"></script>
+  <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="~/lib/handlebars-v4.7.8.js"></script>
+  @RenderSection("scripts", required: false)
+</body>
+</html>

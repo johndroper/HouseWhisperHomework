@@ -1,0 +1,52 @@
+﻿@{
+  Layout = "_Layout";
+}
+@section scripts {
+  <script>
+    function checkAvailability() {
+        const dateInput = $("#date").val();
+        const durationInput = $("#duration").val();
+        if (!dateInput) {
+            $("#availabilityResult").text("Please select a date.");
+            return;
+        }
+        $.ajax({
+            url: '/Home/CheckAvailability', 
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                dateTime: dateInput,
+                durationHours: parseFloat(durationInput)
+            }),
+            success: function(response) {
+                if (response.isFree) {
+                    $("#availabilityResult").text("You are free during the selected time.");
+                } else {
+                    $("#availabilityResult").text("You are not free during the selected time.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error checking availability:', error);
+                $("#availabilityResult").text("An error occurred while checking availability.");
+            }
+        });
+    }
+  </script>
+}
+<h1>Am I Free?</h1>
+<dl>
+    <dt>
+        <label>Date</label>
+    </dt>
+    <dd>
+        <input type="datetime-local" id="date" name="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+    </dd>
+    <dt>
+        <label>Duration (hours)</label>
+    </dt>
+    <dd>
+        <input type="range" id="duration" name="duration" min="1" max="8" step="1" value="1" />
+    </dd>
+</dl>
+<button type="button" onclick="checkAvailability()">Check Availability</button>
+<div id="availabilityResult"></div>
